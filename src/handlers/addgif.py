@@ -24,7 +24,7 @@ async def addgif_cmd(message: Message, state: FSMContext):
 @router.message(AddGif.gif, F.animation)
 async def addgif_gif(message: Message, state: FSMContext):
     await state.update_data({"gif": message.animation.file_id})
-    await message.answer_sticker("CAACAgIAAxkBAAELLz9lpQABQxQTFHNiGlAnZHb0wWRRIG8AAh4bAAIYJRlJOQLcltillS00BA")
+
     await message.reply("<b>Отлично, теперь отправьте название. Оно не должно превышать 32 символа!</b>")
     await state.set_state(AddGif.title)
 
