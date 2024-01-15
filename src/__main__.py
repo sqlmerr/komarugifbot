@@ -4,7 +4,7 @@ import asyncio
 
 from loguru import logger
 
-from aiogram import Bot, Dispatcher
+from aiogram import Bot, Dispatcher, F
 from aiogram.enums import ParseMode
 from src.handlers import register_routers
 from src.middlewares import UserMiddleware, ThrottlingMiddleware
@@ -17,6 +17,10 @@ from motor.motor_asyncio import AsyncIOMotorClient
 dotenv.load_dotenv()
 
 
+async def pass_call(call):
+    await call.answer()
+
+
 async def main():
     logger.info("Initializing MongoDB")
     mongo = AsyncIOMotorClient(os.getenv("MONGO_URL"))
@@ -27,6 +31,8 @@ async def main():
     
     router = register_routers()
     dp.include_router(router)
+    
+    dp.callback_query.register(pass_call, F.data == "pass")
 
     dp.message.middleware(ThrottlingMiddleware())
     dp.callback_query.middleware(ThrottlingMiddleware())
