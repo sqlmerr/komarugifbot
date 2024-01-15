@@ -10,7 +10,7 @@ from src.handlers import register_routers
 from src.middlewares import UserMiddleware, ThrottlingMiddleware
 
 from src.commands import set_bot_commands
-from src.db import User
+from src.db import User, Gif
 from beanie import init_beanie
 from motor.motor_asyncio import AsyncIOMotorClient
 
@@ -20,21 +20,22 @@ dotenv.load_dotenv()
 async def main():
     logger.info("Initializing MongoDB")
     mongo = AsyncIOMotorClient(os.getenv("MONGO_URL"))
-    await init_beanie(database=mongo.your_db_name, document_models=[User])
+    await init_beanie(database=mongo.komarugifbot, document_models=[User, Gif])
 
     bot = Bot(token=os.getenv("BOT_TOKEN"), parse_mode=ParseMode.HTML)
     dp = Dispatcher()
+    
+    router = register_routers()
+    dp.include_router(router)
 
-    dp.message(ThrottlingMiddleware())
-    dp.callback_query(ThrottlingMiddleware())
+    dp.message.middleware(ThrottlingMiddleware())
+    dp.callback_query.middleware(ThrottlingMiddleware())
 
-    dp.message(UserMiddleware())
-    dp.callback_query(UserMiddleware())
+    dp.message.middleware(UserMiddleware())
+    dp.callback_query.middleware(UserMiddleware())
 
     await set_bot_commands(bot)
 
-    router = register_routers()
-    dp.include_router(router)
 
     logger.info('Starting Bot')
     await bot.delete_webhook(drop_pending_updates=True)

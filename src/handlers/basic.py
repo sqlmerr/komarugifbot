@@ -19,4 +19,5 @@ async def start_cmd(message: Message, user: User):
         await user.insert()
         logger.debug(f"registered new user with id {message.from_user.id}")
 
-    await message.reply(f"<b>Hello, {message.from_user.full_name}</b>")
+    await message.answer_sticker("CAACAgIAAxkBAAELLz9lpQABQxQTFHNiGlAnZHb0wWRRIG8AAh4bAAIYJRlJOQLcltillS00BA")
+    await message.reply(f"<b>Привет, {message.from_user.full_name}.</b>\nЯ бот - гифки с комару. Думаю все понятно, здесь можно получить разные гифки с комару, или добавить свои!")
