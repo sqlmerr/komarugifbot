@@ -1,1 +1,2 @@
-version = (0, 0, 1)
+admin = 1341947575
+version = (0, 1)
